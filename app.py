@@ -34,6 +34,7 @@ def get_timeline():
     talks = []
     for talk in timeline:
         i = {
+            "id": talk["id"],
             "content": talk["text"],
             "created_at": talk["created_at"],
             "from": talk["source"],
