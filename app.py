@@ -1,25 +1,46 @@
 #!/usr/bin/env python
 # coding: utf8
 
+import json
+
 import logbook
 
-from flask import abort
 from flask import Flask
 from flask import request
 
-from api import get, post
+from api import fanfou_get
 
 app = Flask(__name__)
 
 
 @app.route("/", methods=['GET'])
-def select():
-	# 扶梯式翻页
+def get_timeline():
+    # 扶梯式翻页
     max_id = request.args.get("max_id", None)
-	count = request.args.get("count", 20)
+    count = request.args.get("count", 20)
 
-	# 电梯式翻页
-	page = request.args.get("page", 1)
+    # 电梯式翻页
+    page = request.args.get("page", 0)
+
+    if page:
+        timeline = fanfou_get("statuses/user_timeline", page=page, mode='lite')
+    else:
+        timeline = fanfou_get(
+            "statuses/user_timeline",
+            max_id=max_id,
+            count=count,
+            mode='lite',
+        )
+    talks = []
+    for talk in timeline:
+        i = {
+            "content": talk["text"],
+            "created_at": talk["created_at"],
+            "from": talk["source"],
+            "location": talk["location"],
+        }
+        talks.append(i)
+    return json.dumps(talks), 200, None
 
 
 if __name__ == '__main__':
@@ -36,4 +57,5 @@ if __name__ == '__main__':
         u'{record.level_name}:{record.message}')
     local_log.push_application()
 
-    app.run(host='127.0.0.1', port=10005)
+    # app.run(host='127.0.0.1', port=10005)
+    app.run(host='0.0.0.0', port=10005, debug=True, use_reloader=True)
