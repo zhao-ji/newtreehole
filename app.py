@@ -36,7 +36,7 @@ def get_timeline():
         i = {
             "id": talk["id"],
             "content": talk["text"],
-            "created_at": talk["created_at"],
+            "created_at": " ".join(talk["created_at"].split(" ")[:4]),
             "from": talk["source"],
             "location": talk["location"],
         }
