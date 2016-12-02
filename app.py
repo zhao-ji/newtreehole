@@ -46,7 +46,7 @@ def get_timeline():
 
 @app.route("/", methods=['POST'])
 def create_talk():
-    talk = request.form["content"]
+    talk = request.json["content"]
     ret = fanfou_post(
         "statuses/update",
         status=talk,
@@ -71,5 +71,5 @@ if __name__ == '__main__':
         u'{record.level_name}:{record.message}')
     local_log.push_application()
 
-    # app.run(host='127.0.0.1', port=10005)
-    app.run(host='0.0.0.0', port=10005, debug=True, use_reloader=True)
+    app.run(host='127.0.0.1', port=10005)
+    # app.run(host='0.0.0.0', port=10005, debug=True, use_reloader=True)
