@@ -49,8 +49,8 @@ def fanfou_get(url="statuses/user_timeline", **kwargs):
         print e
 
 
-def fanfou_post(url, **kwargs):
-    url = 'http://api.fanfou.com/%s.json'.format(url)
+def fanfou_post(url="statuses/update", **kwargs):
+    url = 'http://api.fanfou.com/{}.json'.format(url)
 
     request = oauth.OAuthRequest.from_consumer_and_token(
         consumer,
@@ -62,10 +62,10 @@ def fanfou_post(url, **kwargs):
     request.sign_request(signature_method, consumer, oauth_token)
     headers = request_to_header(request)
 
-    ret = post(url, kwargs, headers=headers)
+    ret = post(url, data=kwargs, headers=headers)
     try:
         assert ret.ok
-        return ret.json
+        return ret.json()
     except Exception, e:
         print e
 

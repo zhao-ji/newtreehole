@@ -8,7 +8,7 @@ import logbook
 from flask import Flask
 from flask import request
 
-from api import fanfou_get
+from api import fanfou_get, fanfou_post
 
 app = Flask(__name__)
 
@@ -42,6 +42,19 @@ def get_timeline():
         }
         talks.append(i)
     return json.dumps(talks), 200, None
+
+
+@app.route("/", methods=['POST'])
+def create_talk():
+    talk = request.form["content"]
+    ret = fanfou_post(
+        "statuses/update",
+        status=talk,
+        source="weixin",
+        mode='lite',
+        location='weixin'
+    )
+    return json.dumps(ret), 201, None
 
 
 if __name__ == '__main__':
